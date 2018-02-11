@@ -24,6 +24,8 @@ const providerRoot = {
   applicationStore: new ApplicationStore()
 }
 
+providerRoot.applicationStore.initializeFirebase();
+
 const renderRoot = () => {
   return (
     <Router history={ history }>

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as styles from './App.less';
 import ApplicationStore from 'stores/ApplicationStore';
+import AuthenticationPage from 'containers/AuthenticationPage';
+import NotesPage from 'containers/NotesPage';
+import { Route } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 
 interface IAppProps {
@@ -10,16 +13,14 @@ interface IAppProps {
 @inject('applicationStore')
 @observer class App extends React.Component<IAppProps, any> {
   public render() {
+    const { isAuthenticated } = this.props.applicationStore;
+
     return (
       <div className={ styles.app }>
+        <Route exact path='/notes' render={ () => isAuthenticated ? <NotesPage /> : <AuthenticationPage /> } />
         { this.renderDevTool() }
       </div>
     )
-  }
-
-  public componentDidMount() {
-    const { applicationStore } = this.props;
-    applicationStore.initializeFirebase();
   }
 
   private renderDevTool() {
