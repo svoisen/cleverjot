@@ -2,14 +2,17 @@
   "name": "cleverjot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/svoisen/cleverjot.git"
   },
   "scripts": {
+    "build": "webpack -p --progress --colors",
+    "lint": "node_modules/.bin/tslint -c tslint.json src/**/*.{ts,tsx}",
+    "pretest": "npm run lint",
     "test": "node node_modules/.bin/jest",
-    "test:update": "node node_modules/.bin/jest -u"
+    "test:update": "node node_modules/.bin/jest -u",
+    "serve": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000"
   },
   "author": "Sean Voisen",
   "license": "ISC",
@@ -30,6 +33,10 @@
     "@types/react-dom": "^16.0.3",
     "@types/react-router-dom": "^4.2.3",
     "awesome-typescript-loader": "^3.4.1",
+    "css-loader": "^0.28.9",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^2.30.1",
