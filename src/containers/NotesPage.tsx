@@ -1,5 +1,6 @@
 import * as React from 'react';
 import ApplicationStore from 'stores/ApplicationStore';
+import Header from 'components/Header';
 import { inject } from 'mobx-react';
 
 interface INotesPageProps {
@@ -10,10 +11,8 @@ interface INotesPageProps {
 class NotesPage extends React.Component<INotesPageProps, any> {
   public render() {
     return (
-      <div>
-        Notes
-      </div>
-    )
+      <Header />
+    );
   }
 }
 

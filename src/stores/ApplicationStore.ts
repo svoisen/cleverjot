@@ -17,7 +17,7 @@ class ApplicationStore {
   }
 
   @action public initializeFirebase() {
-    this._firebaseApp = firebase.initializeApp(config.firebaseConfig)
+    this._firebaseApp = firebase.initializeApp(config.firebaseConfig);
   }
 }
 
