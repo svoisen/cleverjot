@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as styles from './App.less';
-import ApplicationStore from 'stores/ApplicationStore';
+import ApplicationStore, { ApplicationStatus } from 'stores/ApplicationStore';
 import AuthenticationPage from 'containers/AuthenticationPage';
 import NotesPage from 'containers/NotesPage';
 import { Route } from 'react-router-dom';
@@ -12,8 +12,21 @@ interface IAppProps {
 
 @inject('applicationStore')
 @observer class App extends React.Component<IAppProps, any> {
+  constructor(props: IAppProps) {
+    super(props);
+
+    props.applicationStore.initialize();
+  }
+
   public render() {
-    const { isAuthenticated } = this.props.applicationStore;
+    const { isAuthenticated, status } = this.props.applicationStore;
+
+    if (status === ApplicationStatus.INITIALIZING) {
+      return (
+        <div className={ styles.app }>
+        </div>
+      );
+    }
 
     return (
       <div className={ styles.app }>

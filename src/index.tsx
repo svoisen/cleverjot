@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import App from 'containers/App';
 import ApplicationStore from 'stores/ApplicationStore';
 import RouterStore from 'stores/RouterStore';
+import NotesStore from 'stores/NotesStore';
 import { Provider } from 'mobx-react';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -21,10 +22,9 @@ const history = createBrowserHistory();
 
 const providerRoot = {
   routerStore: new RouterStore(history),
-  applicationStore: new ApplicationStore()
+  applicationStore: new ApplicationStore(),
+  notesStore: new NotesStore()
 }
-
-providerRoot.applicationStore.initializeFirebase();
 
 const renderRoot = () => {
   return (
