@@ -12,7 +12,8 @@
     "pretest": "npm run lint",
     "test": "node node_modules/.bin/jest",
     "test:update": "node node_modules/.bin/jest -u",
-    "serve": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000"
+    "serve": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000",
+    "watch:test": "node_modules/.bin/jest --watchAll"
   },
   "author": "Sean Voisen",
   "license": "ISC",
