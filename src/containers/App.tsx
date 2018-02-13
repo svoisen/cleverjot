@@ -47,3 +47,7 @@ interface IAppProps {
 }
 
 export default App;
+
+export {
+  IAppProps
+}

@@ -22,7 +22,7 @@ class ApplicationStore {
   constructor(app: firebase.app.App) {
     this._firebaseApp = app;
     this._firebaseAuth = app.auth();
-    this._firestoreDB = firebase.firestore();
+    this._firestoreDB = app.firestore();
   }
 
   public get firebaseApp(): firebase.app.App {
