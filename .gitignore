@@ -4,3 +4,5 @@ reports/
 *.log
 .DS_Store
 .vscode/
+/config.dev.json
+/config.prod.json

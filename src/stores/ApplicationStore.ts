@@ -1,13 +1,9 @@
 import * as firebase from 'firebase';
-import IAppConfiguration from 'models/IAppConfiguration';
 import User from 'models/User';
 import { action, observable, runInAction } from 'mobx';
 
 // Required for side-effects
 require('firebase/firestore');
-
-// Load configuration data JSON, which is exposed as export in webpack.
-const config: IAppConfiguration = require('Configuration');
 
 enum ApplicationStatus {
   INITIALIZING = 'INITIALIZING',
@@ -18,11 +14,23 @@ class ApplicationStore {
   @observable public status: ApplicationStatus = ApplicationStatus.INITIALIZING;
 
   private _firebaseApp: firebase.app.App;
+  private _firebaseAuth: firebase.auth.Auth;
   private _firestoreDB: firebase.firestore.Firestore;
   private _currentUser: User;
+  private authStatusUnsubscribe: firebase.Unsubscribe;
+
+  constructor(app: firebase.app.App) {
+    this._firebaseApp = app;
+    this._firebaseAuth = app.auth();
+    this._firestoreDB = firebase.firestore();
+  }
 
   public get firebaseApp(): firebase.app.App {
     return this._firebaseApp;
+  }
+
+  public get firebaseAuth(): firebase.auth.Auth {
+    return this._firebaseAuth;
   }
 
   public get firestoreDB(): firebase.firestore.Firestore {
@@ -37,24 +45,27 @@ class ApplicationStore {
     return this._currentUser;
   }
 
-  @action public initialize() {
-    this._firebaseApp = firebase.initializeApp(config.firebaseConfig);
-    this._firestoreDB = firebase.firestore();
+  @action public initialize(): Promise<User | undefined> {
+    return new Promise(resolve => {
+      this.authStatusUnsubscribe = this.firebaseAuth.onAuthStateChanged(firebaseUser => {
+        runInAction(() => {
+          if (firebaseUser) {
+            console.log(`Signed in as ${firebaseUser.email}`);
+            this._currentUser = new User(firebaseUser);
+          } else {
+            console.log('User signed out');
+            this._currentUser = undefined;
+          }
 
-    const auth = this.firebaseApp.auth();
-    auth.onAuthStateChanged(firebaseUser => {
-      runInAction(() => {
-        if (firebaseUser) {
-          console.log(`Signed in as ${firebaseUser.email}`);
-          this._currentUser = new User(firebaseUser);
-        } else {
-          console.log('User signed out');
-          this._currentUser = undefined;
-        }
-
-        this.status = ApplicationStatus.INTIALIZED;
+          this.status = ApplicationStatus.INTIALIZED;
+          resolve(this._currentUser);
+        });
       });
     });
+  }
+
+  public destroy() {
+    this.authStatusUnsubscribe();
   }
 }
 
