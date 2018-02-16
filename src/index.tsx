@@ -17,8 +17,8 @@ const config: IAppConfiguration = require('Configuration');
 // Side-effect imports for loading HTML and root-level styles
 // Ignore these for testing and code coverage numbers.
 if (process.env.NODE_ENV !== 'test') {
-  require('./index.html');
   require('./styles/main.less');
+  require('./index.html');
 }
 
 // Use MobX strict mode
