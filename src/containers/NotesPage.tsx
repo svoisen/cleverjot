@@ -4,9 +4,7 @@ import ApplicationStore from 'stores/ApplicationStore';
 import Header from 'components/Header';
 import NotesStore from 'stores/NotesStore';
 import { inject, observer } from 'mobx-react';
-import { IObservableArray } from 'mobx';
 import NotesList from 'components/NotesList';
-import Note from 'models/Note';
 
 interface INotesPageProps {
   applicationStore?: ApplicationStore;
@@ -20,11 +18,8 @@ interface INotesPageProps {
   public componentDidMount() {
     const { notesStore, applicationStore } = this.props;
     const { firestoreDB, currentUser } = applicationStore;
-    notesStore.fetchNotes(firestoreDB, currentUser);
 
-    (notesStore.notes as IObservableArray<Note>).observe(() => {
-      this.notesList.list.forceUpdate();
-    });
+    notesStore.fetchNotes(firestoreDB, currentUser);
   }
 
   public render() {

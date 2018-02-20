@@ -7,6 +7,7 @@ class Note {
   public text: string;
 
   public static createFromDocument(doc: firebase.firestore.DocumentSnapshot): Note {
+    console.log('Creating note');
     const note = new Note();
     note.id = doc.id;
     note.text = doc.data().text;

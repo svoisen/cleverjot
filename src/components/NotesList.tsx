@@ -3,23 +3,35 @@ import * as styles from './NotesList.less';
 import { AutoSizer, List, ListRowProps } from 'react-virtualized';
 import Note from 'models/Note';
 import NotesListItem from 'components/NotesListItem';
+import { IObservableArray, Lambda } from 'mobx';
+import { observer } from 'mobx-react';
 
 interface INotesListProps {
   notes: Array<Note>;
 }
 
-class NotesList extends React.PureComponent<INotesListProps, any> {
-  private _list: List;
+@observer class NotesList extends React.Component<INotesListProps, any> {
+  private list: List;
+  private observeDisposer: Lambda;
 
   constructor(props: INotesListProps) {
     super(props);
 
     this.getRowRenderer = this.getRowRenderer.bind(this);
     this.getRowHeight = this.getRowHeight.bind(this);
+    this.observeNotes(props.notes);
   }
 
-  public get list(): List {
-    return this._list;
+  componentWillReceiveProps(newProps: INotesListProps): void {
+    if (newProps.notes != this.props.notes) {
+      this.observeNotes(newProps.notes);
+    }
+  }
+
+  componentWillUnmount(): void {
+    if (this.observeDisposer) {
+      this.observeDisposer();
+    }
   }
 
   public render() {
@@ -30,7 +42,7 @@ class NotesList extends React.PureComponent<INotesListProps, any> {
           {({width, height}) => {
             return (
               <List
-                ref={ ref => this._list = ref }
+                ref={ ref => this.list = ref }
                 className={ styles.notesListView }
                 height={ height }
                 width={ width }
@@ -40,8 +52,21 @@ class NotesList extends React.PureComponent<INotesListProps, any> {
             );
           }}
         </AutoSizer>
+        <div className={ styles.notesListCount }>
+          { notes.length }
+        </div>
       </div>
     );
+  }
+
+  private observeNotes(notes: Array<Note>): void {
+    if (this.observeDisposer) {
+      this.observeDisposer();
+    }
+
+    this.observeDisposer = (notes as IObservableArray<Note>).observe(() => {
+      this.list.forceUpdateGrid();
+    });
   }
 
   private getRowHeight(): number {
@@ -52,7 +77,7 @@ class NotesList extends React.PureComponent<INotesListProps, any> {
     const note = this.props.notes[props.index];
 
     return (
-      <NotesListItem note={ note } />
+      <NotesListItem key={ props.index } note={ note } />
     );
   }
 }
