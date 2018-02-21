@@ -1,0 +1,19 @@
+@import '~styles/_base';
+@import '~styles/_colors';
+
+.menuButton {
+  color: @white;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: @header-height;
+  height: @header-height;
+
+  &:hover {
+    background: darken(@dark-blue, 5%);
+  }
+}
+
+.menuButton > svg {
+  flex-grow: 1;
+}
